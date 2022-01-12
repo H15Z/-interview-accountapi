@@ -1,55 +1,23 @@
 package client
 
 import (
-	"net/http"
-	"time"
+	"github.com/H15Z/-interview-accountapi/client/accounts"
+	"github.com/H15Z/-interview-accountapi/client/restclient"
 )
 
-// package defaults - change as needed for production
-const default_host string = "http://localhost:8080/v1"
-const default_timeout time.Duration = 15 * time.Second
+// client service
+type client struct {
+	Accounts *accounts.Accounts
 
-type Client struct {
-	Host       string
-	HTTPClient *http.Client
+	// other API resources can go here... or a separate service could be used
 }
 
-//Create client
-func NewClient(host string) *Client {
+func New() *client {
 
-	return &Client{
-		Host: host,
-		HTTPClient: &http.Client{
-			Timeout: default_timeout,
-		},
+	// create rest client and use defaults
+	c := restclient.NewClient(restclient.Defaults())
+
+	return &client{
+		Accounts: accounts.NewAccounts(c),
 	}
-}
-
-func (c *Client) GetRequest(req *http.Request, v interface{}) error {
-
-}
-
-func (c *Client) DeleteRequest(req *http.Request, v interface{}) error {
-
-}
-
-func (c *Client) PostRequest(req *http.Request, v interface{}) error {
-	req.Header.Set("Content-Type", "application/json; charset=utf-8")
-	req.Header.Set("Accept", "application/json; charset=utf-8")
-
-	res, err := c.HTTPClient.Do(req)
-	if err != nil {
-		return err
-	}
-
-	defer res.Body.Close()
-
-	if res.StatusCode < http.StatusOK || res.StatusCode >= http.StatusBadRequest {
-
-	}
-
-	return nil
-}
-
-type response struct {
 }

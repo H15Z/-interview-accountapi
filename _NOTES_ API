@@ -25,6 +25,32 @@ curl --location --request POST 'http://localhost:8080/v1/organisation/accounts' 
 }'
 
 
+
+curl --location --request POST 'http://localhost:8080/v1/organisation/accounts' \
+--header 'Authorization: {{authorization}}' \
+--header 'Content-Type: application/json' \
+--header 'Date: {{request_date}}' \
+--header 'Digest: {{request_signing_digest}}' \
+--data-raw '{
+  "data": {
+    "id": "{{random_guid}}",
+    "organisation_id": "",
+    "type": "accounts",
+    "attributes": {
+       "country": "GB",
+        "base_currency": "GBP",
+        "bank_id": "400302",
+        "bank_id_code": "GBDSC",
+        "account_number": "10000004",
+        "customer_id": "234",
+        "iban": "GB28NWBK40030212764204",
+        "bic": "NWBKGB42",
+        "account_classification": "Personal"
+    }
+  }
+}'
+
+
 FETCH
 
 curl --location -g --request GET 'http://localhost:8080/v1/organisation/accounts/{{account_id}}' \
@@ -40,6 +66,11 @@ curl --location -g --request DELETE 'http://localhost:8080/v1/organisation/accou
 --header 'Date: {{request_date}}' \
 --data-raw ''
 
+TEST
+https://github.com/form3tech-oss/interview-accountapi
+//
+
+https://api-docs.form3.tech/api.html#organisation-accounts-create
 
 FORM3
 
@@ -66,4 +97,6 @@ https://dev.to/plutov/writing-rest-api-client-in-go-3fkg
 ** VALIDATION
 
 ** RESPONSE AND ERROR HANDLING
+
+** TEST package import externally
 
