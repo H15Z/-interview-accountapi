@@ -1,7 +1,9 @@
 package ports
 
+import "context"
+
 // use inferface for dependecy injection
-// provided as separate package for reuse in additional API resources not just accounts
+// provided as separate package for reuse in additional API resources not just for accounts (incase of future development)
 type RestClient interface {
-	PostRequest(string, string, interface{}) error
+	PostRequest(ctx context.Context, resource string, d interface{}) ([]byte, error)
 }

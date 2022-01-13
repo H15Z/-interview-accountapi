@@ -9,7 +9,8 @@ import (
 type client struct {
 	Accounts *accounts.Accounts
 
-	// other API resources can go here... or a separate service could be used
+	// other API resources can go here...
+	// or a separate service could be used
 }
 
 func New() *client {

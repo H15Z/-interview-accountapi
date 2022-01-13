@@ -1,6 +1,5 @@
 package models
 
-// Maybe move this to accounts package? Perhaps better in there
 type AccountData struct {
 	Attributes     *AccountAttributes `json:"attributes,omitempty"`
 	ID             string             `json:"id,omitempty"`
