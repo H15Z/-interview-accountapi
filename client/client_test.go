@@ -2,7 +2,7 @@ package client
 
 import (
 	"context"
-	"fmt"
+	"strings"
 	"testing"
 	"time"
 
@@ -23,8 +23,7 @@ func TestAccountsCreateSuccess(t *testing.T) {
 	c := New()
 
 	/*
-
-		REFERENCE DATA TO SUBMIT
+		REFERENCE DATA
 
 		{
 		"data": {
@@ -68,12 +67,13 @@ func TestAccountsCreateSuccess(t *testing.T) {
 		},
 	}
 
-	guid, err := c.Accounts.Create(ctx, payload)
+	guid, resp, err := c.Accounts.Create(ctx, payload)
 	assert.Equal(t, nil, err)
-
-	fmt.Println(guid, err) // DELETE ME
-
-	// TODO verify guid and Accounts Parse data
+	// assert.Equal(t, "/v1/organisation/accounts/"+guid, resource_link)
+	assert.True(t, strings.Contains(resp.Links.Self, "/v1/organisation/accounts/"))
+	assert.NotEmpty(t, resp.Data)
+	assert.NotEqual(t, "", guid)
+	// assert.True(t, IsValidUUID(guid))
 
 }
 
@@ -104,12 +104,8 @@ func TestAccountsCreateFailWithError(t *testing.T) {
 		},
 	}
 
-	guid, err := c.Accounts.Create(ctx, payload)
+	_, _, err := c.Accounts.Create(ctx, payload)
 	assert.NotEqual(t, nil, err)
 	assert.Equal(t, "validation failure list:\nvalidation failure list:\nvalidation failure list:\nname in body is required\norganisation_id in body is required", err.Error())
-
-	fmt.Println(guid, err) // DELETE ME
-
-	// TODO verify guid and Accounts Parse data
 
 }

@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 )
@@ -43,15 +42,16 @@ func Defaults() string {
 	return default_host
 }
 
-// func (c *RestClient) GetRequest(req *http.Request, v interface{}) error {
-
-// }
-
 // func (c *RestClient) DeleteRequest(req *http.Request, v interface{}) error {
 
 // }
 
-func (c *RestClient) PostRequest(ctx context.Context, resource string, d interface{}) ([]byte, error) {
+func (c RestClient) GetRequest(ctx context.Context, resource string) ([]byte, error) {
+
+	return []byte{}, nil
+}
+
+func (c RestClient) PostRequest(ctx context.Context, resource string, d interface{}) ([]byte, error) {
 
 	//create request
 	req, err := c.buildPostRequest(ctx, resource, d)
@@ -59,7 +59,7 @@ func (c *RestClient) PostRequest(ctx context.Context, resource string, d interfa
 		return []byte{}, err
 	}
 
-	// TODO move to sparate function
+	// TODO move to sparate function to reuse by other request types
 	//execute request
 	res, err := c.HTTPClient.Do(req)
 	if err != nil {
@@ -76,6 +76,7 @@ func (c RestClient) buildPostRequest(ctx context.Context, resource string, d int
 	var req *http.Request
 	var err error
 
+	//create payload
 	url := c.Host + resource
 	buff := new(bytes.Buffer)
 	body := postRequestBody{
@@ -87,6 +88,7 @@ func (c RestClient) buildPostRequest(ctx context.Context, resource string, d int
 		return req, err
 	}
 
+	//create request
 	req, err = http.NewRequest("POST", url, buff)
 	if err != nil {
 		return req, err
@@ -114,11 +116,10 @@ func (c RestClient) handleResponse(res *http.Response) ([]byte, error) {
 
 	// looking for status 2xx
 	if res.StatusCode < http.StatusOK || res.StatusCode >= http.StatusBadRequest {
-		// parse "error_msg" into new error
+
+		// parse "error_msg" from response into new error
 		var e errResponse
 		err = json.Unmarshal(b, &e)
-
-		fmt.Println(e)
 
 		if err != nil {
 			return b, err

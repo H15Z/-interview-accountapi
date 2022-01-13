@@ -25,3 +25,13 @@ type AccountAttributes struct {
 	Status                  *string  `json:"status,omitempty"`
 	Switched                *bool    `json:"switched,omitempty"`
 }
+
+type AccountsResponse struct {
+	Data  AccountData `json:"data"`
+	Links struct {
+		Self string `json:"self"`
+	} `json:"links"`
+}
+
+type AccountsLinks struct {
+}
