@@ -42,9 +42,10 @@ func Defaults() string {
 	return default_host
 }
 
-// func (c *RestClient) DeleteRequest(req *http.Request, v interface{}) error {
+func (c RestClient) DeleteRequest(ctx context.Context, resource string) error {
 
-// }
+	return nil
+}
 
 func (c RestClient) GetRequest(ctx context.Context, resource string) ([]byte, error) {
 

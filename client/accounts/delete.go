@@ -1,6 +1,15 @@
 package accounts
 
-func (a *Accounts) Delete() error {
+import (
+	"context"
+	"errors"
+	"strings"
+)
 
-	return nil
+func (a *Accounts) Delete(ctx context.Context, resource string) error {
+	if !strings.Contains(resource, "/v1/organisation/accounts/") {
+		return errors.New("account API resource link not valid")
+	}
+
+	return a.Client.DeleteRequest(ctx, resource)
 }

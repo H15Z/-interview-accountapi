@@ -7,4 +7,5 @@ import "context"
 type RestClient interface {
 	PostRequest(ctx context.Context, resource string, d interface{}) ([]byte, error)
 	GetRequest(ctx context.Context, resource string) ([]byte, error)
+	DeleteRequest(ctx context.Context, resource string) error
 }

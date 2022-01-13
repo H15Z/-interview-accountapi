@@ -26,12 +26,12 @@ type AccountAttributes struct {
 	Switched                *bool    `json:"switched,omitempty"`
 }
 
+// Response Struct for Account resources
 type AccountsResponse struct {
-	Data  AccountData `json:"data"`
-	Links struct {
-		Self string `json:"self"`
-	} `json:"links"`
+	Data  AccountData   `json:"data"`
+	Links AccountsLinks `json:"links"`
 }
 
 type AccountsLinks struct {
+	Self string `json:"self"`
 }

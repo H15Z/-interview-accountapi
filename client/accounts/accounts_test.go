@@ -19,8 +19,9 @@ import (
 */
 
 type stubClient struct {
-	PostResponse stubResponse
-	GetResponse  stubResponse
+	PostResponse   stubResponse
+	GetResponse    stubResponse
+	DeleteResponse stubResponse
 }
 
 type stubResponse struct {
@@ -34,6 +35,10 @@ func (s stubClient) PostRequest(ctx context.Context, resource string, d interfac
 
 func (s stubClient) GetRequest(ctx context.Context, resource string) ([]byte, error) {
 	return s.GetResponse.Body, s.GetResponse.Error
+}
+
+func (s stubClient) DeleteRequest(ctx context.Context, resource string) error {
+	return s.DeleteResponse.Error
 }
 
 func TestAccountsCreateSuccess(t *testing.T) {

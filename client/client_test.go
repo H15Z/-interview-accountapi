@@ -16,6 +16,7 @@ func TestCreateClient(t *testing.T) {
 }
 
 //End-to-end accounts tests
+//RUN in sequence
 func TestAccountsCreateSuccess(t *testing.T) {
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
