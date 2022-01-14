@@ -10,7 +10,7 @@ import (
 // API client defaults
 // change as needed for production
 // or refactor to use Enviroment Variables
-const default_host string = "http://localhost:8080/v1"
+const default_host string = "http://localhost:8080"
 
 //possibly move this to models
 type postRequestBody struct {
@@ -18,15 +18,16 @@ type postRequestBody struct {
 }
 
 type errResponse struct {
-	Error string `json:"error_message"`
+	Error   string `json:"error_message"`
+	Message string `json:"message"`
 }
 
 //Rest API Client struct
-//Handles HTTP(s) requests made to API
+//Handles HTTP(s) requests made to Form3 API
 type RestClient struct {
 	Host          string
 	HTTPClient    *http.Client
-	Authorization string //Not used in exercise
+	Authorization string //Not used in exercise but present in production
 }
 
 //Create client
@@ -48,6 +49,7 @@ func (c RestClient) doRequest(req *http.Request) ([]byte, error) {
 	if err != nil {
 		return []byte{}, err
 	}
+
 	defer res.Body.Close()
 
 	//handle response
@@ -74,7 +76,7 @@ func (c RestClient) handleResponse(res *http.Response) ([]byte, error) {
 			return b, err
 		}
 
-		return b, errors.New(e.Error)
+		return b, errors.New(e.Error + e.Message) //errors provided in different formats
 
 	} else {
 		return b, nil

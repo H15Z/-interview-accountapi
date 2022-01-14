@@ -16,7 +16,6 @@ func (c RestClient) GetRequest(ctx context.Context, resource string) ([]byte, er
 
 func (c RestClient) buildGetRequest(ctx context.Context, resource string) (*http.Request, error) {
 	url := c.Host + resource
-
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return req, err

@@ -14,17 +14,11 @@ import (
 // decoupled from rest client, allows for independent testing
 
 func TestAccountsCreateSuccess(t *testing.T) {
-
 	// create stub rest client
 	stub_client := stubClient{
 		PostResponse: stubResponse{
 			Error: nil,
-
-			/*
-				mock of succesfull response
-			*/
-
-			Body: stub_response,
+			Body:  testing_stub_response, //mock of succesfull response
 		},
 	}
 
@@ -59,7 +53,7 @@ func TestAccountsFetchSucces(t *testing.T) {
 	stub_client := stubClient{
 		GetResponse: stubResponse{
 			Error: nil,
-			Body:  stub_response,
+			Body:  testing_stub_response,
 		},
 	}
 
@@ -82,7 +76,7 @@ func TestAccountsFetchSucces(t *testing.T) {
 
 //delete failures
 
-var stub_response []byte = []byte(`
+var testing_stub_response []byte = []byte(`
 	{
 		"data":
 		{

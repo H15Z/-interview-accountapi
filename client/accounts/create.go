@@ -16,7 +16,7 @@ func (a Accounts) Create(ctx context.Context, d models.AccountData) (string, mod
 	guid := uuid.New().String()
 	d.ID = guid // assign guid to payload
 
-	b, err := a.Client.PostRequest(ctx, "/organisation/accounts", d)
+	b, err := a.Client.PostRequest(ctx, "/v1/organisation/accounts", d)
 	if err != nil {
 		return guid, models.AccountsResponse{}, err
 	}

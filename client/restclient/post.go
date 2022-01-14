@@ -8,7 +8,6 @@ import (
 )
 
 func (c RestClient) PostRequest(ctx context.Context, resource string, d interface{}) ([]byte, error) {
-
 	//create request
 	req, err := c.buildPostRequest(ctx, resource, d)
 	if err != nil {
@@ -25,6 +24,7 @@ func (c RestClient) buildPostRequest(ctx context.Context, resource string, d int
 
 	//create payload
 	url := c.Host + resource
+
 	buff := new(bytes.Buffer)
 	body := postRequestBody{
 		Data: d,

@@ -35,12 +35,11 @@ func (a Accounts) FetchByResource(ctx context.Context, resource string) (models.
 
 //common fetch function
 func (a Accounts) doFetch(ctx context.Context, resource string) (models.AccountsResponse, error) {
-	var d models.AccountsResponse
 
 	b, err := a.Client.GetRequest(ctx, resource)
 	if err != nil {
-		return d, err
-	}
 
+		return models.AccountsResponse{}, err
+	}
 	return a.parseResponse(b)
 }

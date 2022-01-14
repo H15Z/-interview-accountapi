@@ -10,9 +10,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var testing_accounts_resource_link string
+
 func TestCreateClient(t *testing.T) {
 	c := New()
-	assert.Equal(t, c.Accounts.Client, "")
+	assert.NotEmpty(t, c.Accounts.Client)
+
+	//TODO add more assetions here
 }
 
 //End-to-end accounts tests
@@ -76,6 +80,8 @@ func TestAccountsCreateSuccess(t *testing.T) {
 	assert.NotEqual(t, "", guid)
 	// assert.True(t, IsValidUUID(guid))
 
+	testing_accounts_resource_link = resp.Links.Self
+
 }
 
 func TestAccountsCreateFailWithError(t *testing.T) {
@@ -110,3 +116,38 @@ func TestAccountsCreateFailWithError(t *testing.T) {
 	assert.Equal(t, "validation failure list:\nvalidation failure list:\nvalidation failure list:\nname in body is required\norganisation_id in body is required", err.Error())
 
 }
+
+func TestAccountsFetchSuccess(t *testing.T) {
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
+	defer cancel()
+	c := New()
+
+	resp, err := c.Accounts.FetchByResource(ctx, testing_accounts_resource_link)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, testing_accounts_resource_link, resp.Links.Self)
+	assert.Equal(t, "GB28NWBK40030212764204", resp.Data.Attributes.Iban)
+	assert.NotEmpty(t, resp.Data)
+
+}
+
+func TestAccountsFetchFail(t *testing.T) {
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
+	defer cancel()
+	c := New()
+
+	resp, err := c.Accounts.FetchByResource(ctx, "/v1/organisation/accounts/771d850a-f6b3-4c16-b544-bbc8a05b740d")
+
+	assert.NotEqual(t, nil, err)
+	assert.Equal(t, "record 771d850a-f6b3-4c16-b544-bbc8a05b740d does not exist", err.Error())
+	assert.Empty(t, resp.Data)
+
+}
+
+// delete success
+
+// delete fail

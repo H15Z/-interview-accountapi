@@ -6,7 +6,7 @@ import "context"
 	stub rest client to inject into Accounts for testing
 	simulates responses from restclient
 	allows for decoupled testing
-	could be moved to separate package for reuse in other API resources
+	could be moved to separate package for reuse against other API resources
 */
 
 type stubClient struct {
