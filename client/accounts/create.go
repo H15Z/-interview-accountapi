@@ -9,7 +9,7 @@ import (
 
 //Create account using Form3 API: https://api-docs.form3.tech/api.html#organisation-accounts-create
 //Accepts context and  AccountData struct
-//Returns guid of request , new resource link including guid of created account and any errors encountered
+//Returns  request guid, accountsData struct and error
 func (a Accounts) Create(ctx context.Context, d models.AccountData) (string, models.AccountsResponse, error) {
 
 	//generate guid for request
@@ -27,5 +27,6 @@ func (a Accounts) Create(ctx context.Context, d models.AccountData) (string, mod
 		return guid, r, err
 	}
 
+	//TODO think about removing guid from return, not sure there is much use for it
 	return guid, r, err
 }

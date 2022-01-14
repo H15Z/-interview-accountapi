@@ -11,35 +11,7 @@ import (
 )
 
 // test accounts by injecting stub structs
-// decoupled from rest client which allows for independent testing
-
-/*
-	stub rest client to inject into Accounts for testing
-	simulates responses from restclient
-*/
-
-type stubClient struct {
-	PostResponse   stubResponse
-	GetResponse    stubResponse
-	DeleteResponse stubResponse
-}
-
-type stubResponse struct {
-	Body  []byte
-	Error error
-}
-
-func (s stubClient) PostRequest(ctx context.Context, resource string, d interface{}) ([]byte, error) {
-	return s.PostResponse.Body, s.PostResponse.Error
-}
-
-func (s stubClient) GetRequest(ctx context.Context, resource string) ([]byte, error) {
-	return s.GetResponse.Body, s.GetResponse.Error
-}
-
-func (s stubClient) DeleteRequest(ctx context.Context, resource string) error {
-	return s.DeleteResponse.Error
-}
+// decoupled from rest client, allows for independent testing
 
 func TestAccountsCreateSuccess(t *testing.T) {
 
@@ -101,6 +73,14 @@ func TestAccountsFetchSucces(t *testing.T) {
 	assert.Equal(t, "e2e47bf9-1d1a-46fc-930d-92a43903f857", resp.Data.OrganisationID)
 
 }
+
+//fetch by id
+
+//fetch failure
+
+//delete success
+
+//delete failures
 
 var stub_response []byte = []byte(`
 	{

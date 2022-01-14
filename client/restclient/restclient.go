@@ -1,8 +1,6 @@
 package restclient
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"errors"
 	"io"
@@ -14,6 +12,7 @@ import (
 // or refactor to use Enviroment Variables
 const default_host string = "http://localhost:8080/v1"
 
+//possibly move this to models
 type postRequestBody struct {
 	Data interface{} `json:"data"`
 }
@@ -22,6 +21,8 @@ type errResponse struct {
 	Error string `json:"error_message"`
 }
 
+//Rest API Client struct
+//Handles HTTP(s) requests made to API
 type RestClient struct {
 	Host          string
 	HTTPClient    *http.Client
@@ -42,26 +43,7 @@ func Defaults() string {
 	return default_host
 }
 
-func (c RestClient) DeleteRequest(ctx context.Context, resource string) error {
-
-	return nil
-}
-
-func (c RestClient) GetRequest(ctx context.Context, resource string) ([]byte, error) {
-
-	return []byte{}, nil
-}
-
-func (c RestClient) PostRequest(ctx context.Context, resource string, d interface{}) ([]byte, error) {
-
-	//create request
-	req, err := c.buildPostRequest(ctx, resource, d)
-	if err != nil {
-		return []byte{}, err
-	}
-
-	// TODO move to sparate function to reuse by other request types
-	//execute request
+func (c RestClient) doRequest(req *http.Request) ([]byte, error) {
 	res, err := c.HTTPClient.Do(req)
 	if err != nil {
 		return []byte{}, err
@@ -72,42 +54,8 @@ func (c RestClient) PostRequest(ctx context.Context, resource string, d interfac
 	return c.handleResponse(res)
 }
 
-func (c RestClient) buildPostRequest(ctx context.Context, resource string, d interface{}) (*http.Request, error) {
-
-	var req *http.Request
-	var err error
-
-	//create payload
-	url := c.Host + resource
-	buff := new(bytes.Buffer)
-	body := postRequestBody{
-		Data: d,
-	}
-
-	err = json.NewEncoder(buff).Encode(body)
-	if err != nil {
-		return req, err
-	}
-
-	//create request
-	req, err = http.NewRequest("POST", url, buff)
-	if err != nil {
-		return req, err
-	}
-
-	req.Header.Set("Content-Type", "application/json; charset=utf-8")
-	req.Header.Set("Accept", "application/json")
-
-	/*
-		headers - not used but present in production
-		'Authorization: {{authorization}}'
-		'Digest: {{request_signing_digest}}'
-	*/
-
-	return req, nil
-
-}
-
+//handle API response
+//for now used by Post and Get, Delete does not have a response body
 func (c RestClient) handleResponse(res *http.Response) ([]byte, error) {
 	b, err := io.ReadAll(res.Body)
 
@@ -115,7 +63,7 @@ func (c RestClient) handleResponse(res *http.Response) ([]byte, error) {
 		return b, err
 	}
 
-	// looking for status 2xx
+	// looking for status codes 2xx
 	if res.StatusCode < http.StatusOK || res.StatusCode >= http.StatusBadRequest {
 
 		// parse "error_msg" from response into new error

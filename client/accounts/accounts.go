@@ -25,7 +25,6 @@ func (a Accounts) parseResponse(b []byte) (models.AccountsResponse, error) {
 	if err != nil {
 		return r, err
 	}
-
 	return r, nil
 }
 

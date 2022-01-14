@@ -8,7 +8,10 @@ import (
 	"github.com/H15Z/-interview-accountapi/client/models"
 )
 
-func (a Accounts) Fetch(ctx context.Context, guid string) (models.AccountsResponse, error) {
+//Create account using Form3 API: https://api-docs.form3.tech/api.html#organisation-accounts-fetch
+//Accepts context and account guid, resource link is generated from guid
+//Returns accountsData struct and error
+func (a Accounts) FetchById(ctx context.Context, guid string) (models.AccountsResponse, error) {
 	//validate guid
 	if !IsValidUUID(guid) {
 		return models.AccountsResponse{}, errors.New("account GUID not valid")
@@ -18,6 +21,9 @@ func (a Accounts) Fetch(ctx context.Context, guid string) (models.AccountsRespon
 	return a.doFetch(ctx, resource)
 }
 
+//Create account using Form3 API: https://api-docs.form3.tech/api.html#organisation-accounts-fetch
+//Accepts context and account resource link
+//Returns accountsData struct and error
 func (a Accounts) FetchByResource(ctx context.Context, resource string) (models.AccountsResponse, error) {
 	//validate resource link
 	if !strings.Contains(resource, "/v1/organisation/accounts/") {
@@ -27,6 +33,7 @@ func (a Accounts) FetchByResource(ctx context.Context, resource string) (models.
 	return a.doFetch(ctx, resource)
 }
 
+//common fetch function
 func (a Accounts) doFetch(ctx context.Context, resource string) (models.AccountsResponse, error) {
 	var d models.AccountsResponse
 
