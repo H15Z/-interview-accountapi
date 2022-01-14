@@ -4,6 +4,7 @@ services:
   accountapi:
     image: form3tech/interview-accountapi:v1.0.0-50-ga251d4fc
     restart: on-failure
+    container_name: accountapi
     depends_on:
       - postgresql
       - vault
@@ -50,7 +51,7 @@ services:
       - vault
       - accountapi
     environment:
-      - API_HOST=http://interview-accountapi_accountapi_1:8080
+      - API_HOST=http://accountapi:8080
     restart: always
     volumes:
       - ./:/app/

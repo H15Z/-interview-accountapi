@@ -7,4 +7,11 @@ echo "================================================================"
 echo "Running Accounts Client Tests..."
 echo "================================================================"
 
-go test -v  ./...
+
+if go test -v ./... ; then
+	echo "ALL TESTS PASSED..."
+else
+	echo "====================================================================================================="
+	echo "TESTS FAILED! Please verify correct API_HOST enviroment variable is configured in docker-compose.yml "
+	echo "====================================================================================================="
+fi
