@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"os"
 )
 
 // API client defaults
@@ -41,6 +42,14 @@ func NewClient(host string) *RestClient {
 
 //Returns client defaults
 func Defaults() string {
+
+	//get API_HOST env variable if available
+	host := os.Getenv("API_HOST")
+
+	if host != "" {
+		return host
+	}
+
 	return default_host
 }
 

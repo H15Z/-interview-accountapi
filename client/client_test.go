@@ -11,6 +11,7 @@ import (
 )
 
 var testing_accounts_resource_link string
+var testing_accounts_version int
 
 func TestCreateClient(t *testing.T) {
 	c := New()
@@ -20,7 +21,7 @@ func TestCreateClient(t *testing.T) {
 }
 
 //End-to-end accounts tests
-//RUN in sequence
+//RUN Tests in sequence
 func TestAccountsCreateSuccess(t *testing.T) {
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
@@ -81,6 +82,7 @@ func TestAccountsCreateSuccess(t *testing.T) {
 	// assert.True(t, IsValidUUID(guid))
 
 	testing_accounts_resource_link = resp.Links.Self
+	testing_accounts_version = int(*resp.Data.Version)
 
 }
 
@@ -148,6 +150,29 @@ func TestAccountsFetchFail(t *testing.T) {
 
 }
 
-// delete success
-
 // delete fail
+func TestAccountsDeleteFailWrongVersion(t *testing.T) {
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
+	defer cancel()
+	c := New()
+
+	_, err := c.Accounts.Delete(ctx, testing_accounts_resource_link, 99)
+	assert.Equal(t, "delete failed with status code: 409 Conflict", err.Error())
+}
+
+// delete success
+func TestAccountsDeleteSuccess(t *testing.T) {
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
+	defer cancel()
+	c := New()
+
+	resp, err := c.Accounts.Delete(ctx, testing_accounts_resource_link, testing_accounts_version)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "204\tNo Content\tResource has been successfully deleted", resp)
+
+}

@@ -13,7 +13,7 @@ import (
 // test accounts by injecting stub structs
 // decoupled from rest client, allows for independent testing
 
-func TestAccountsCreateSuccess(t *testing.T) {
+func TestCreateSuccess(t *testing.T) {
 	// create stub rest client
 	stub_client := stubClient{
 		PostResponse: stubResponse{
@@ -30,7 +30,7 @@ func TestAccountsCreateSuccess(t *testing.T) {
 	assert.NotEqual(t, "", guid)
 }
 
-func TestAccountsCreateFailure(t *testing.T) {
+func TestCreateFailure(t *testing.T) {
 	// create stub rest client
 	stub_client := stubClient{
 		PostResponse: stubResponse{
@@ -48,7 +48,7 @@ func TestAccountsCreateFailure(t *testing.T) {
 
 }
 
-func TestAccountsFetchSucces(t *testing.T) {
+func TestFetchSucces(t *testing.T) {
 	// create stub rest client
 	stub_client := stubClient{
 		GetResponse: stubResponse{
@@ -71,10 +71,78 @@ func TestAccountsFetchSucces(t *testing.T) {
 //fetch by id
 
 //fetch failure
+func TestFetchFail(t *testing.T) {
+	// create stub rest client
+	stub_client := stubClient{
+		GetResponse: stubResponse{
+			Error: errors.New("record 771d850a-f6b3-4c16-b544-bbc8a05b740d does not exist"),
+			Body:  []byte(`{}`),
+		},
+	}
+
+	accounts := NewAccounts(stub_client)
+	resource_link := "/v1/organisation/accounts/771d850a-f6b3-4c16-b544-bbc8a05b740d"
+	resp, err := accounts.FetchByResource(context.Background(), resource_link)
+
+	assert.Equal(t, "record 771d850a-f6b3-4c16-b544-bbc8a05b740d does not exist", err.Error())
+	assert.Empty(t, resp.Data)
+
+}
 
 //delete success
+func TestDeleteSuccess(t *testing.T) {
+	// create stub rest client
+	stub_client := stubClient{
+		DeleteResponse: stubResponse{
+			ResponseCode: 204,
+			Error:        nil,
+		},
+	}
+
+	accounts := NewAccounts(stub_client)
+	resource_link := "/v1/organisation/accounts/771d850a-f6b3-4c16-b544-bbc8a05b740d"
+	resp, err := accounts.Delete(context.Background(), resource_link, 1)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "204\tNo Content\tResource has been successfully deleted", resp)
+
+}
 
 //delete failures
+func TestDeleteFail404(t *testing.T) {
+	// create stub rest client
+	stub_client := stubClient{
+		DeleteResponse: stubResponse{
+			ResponseCode: 404,
+			Error:        errors.New("delete fail error"),
+		},
+	}
+
+	accounts := NewAccounts(stub_client)
+	resource_link := "/v1/organisation/accounts/771d850a-f6b3-4c16-b544-bbc8a05b740d"
+	resp, err := accounts.Delete(context.Background(), resource_link, 1)
+
+	assert.Equal(t, "delete fail error", err.Error())
+	assert.Equal(t, "404\tNot Found\tSpecified resource does not exist", resp)
+
+}
+func TestDeleteFail409(t *testing.T) {
+	// create stub rest client
+	stub_client := stubClient{
+		DeleteResponse: stubResponse{
+			ResponseCode: 409,
+			Error:        errors.New("delete fail error"),
+		},
+	}
+
+	accounts := NewAccounts(stub_client)
+	resource_link := "/v1/organisation/accounts/771d850a-f6b3-4c16-b544-bbc8a05b740d"
+	resp, err := accounts.Delete(context.Background(), resource_link, 1)
+
+	assert.Equal(t, "delete fail error", err.Error())
+	assert.Equal(t, "409\tConflict\tSpecified version incorrect", resp)
+
+}
 
 var testing_stub_response []byte = []byte(`
 	{

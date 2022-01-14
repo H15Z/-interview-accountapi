@@ -1,7 +1,7 @@
 package restclient
 
-//test buildPostRequest
+// test get
 
-//test handle response
+// test post
 
-//test handle error response
+// test delete
