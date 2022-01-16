@@ -5,6 +5,9 @@ import (
 	"net/http"
 )
 
+//GET Request
+//Accepts Context and Form3 API resource link
+//Returns Request Body, Error
 func (c RestClient) GetRequest(ctx context.Context, resource string) ([]byte, error) {
 	req, err := c.buildGetRequest(ctx, resource)
 	if err != nil {

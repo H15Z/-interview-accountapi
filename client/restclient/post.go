@@ -7,6 +7,9 @@ import (
 	"net/http"
 )
 
+//POST Request
+//Accepts Context, Form3 API resource link, data struct ( AccountData )
+//Returns Request Body, Error
 func (c RestClient) PostRequest(ctx context.Context, resource string, d interface{}) ([]byte, error) {
 	//create request
 	req, err := c.buildPostRequest(ctx, resource, d)
