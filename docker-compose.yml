@@ -56,4 +56,4 @@ services:
     volumes:
       - ./:/app/
 
-    command: sh /app/runtests.sh
+    command: sh /app/scripts/test/runtests.sh
